@@ -8,9 +8,9 @@ var builder = require('botbuilder');
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 5000, function () {
-   console.log('%s listening to %s', server.name, server.url); 
+    console.log('%s listening to %s', server.name, server.url);
 });
-  
+
 // Create chat bot
 var connector = new builder.ChatConnector({
     appId: process.env.MICROSOFT_APP_ID,
@@ -31,10 +31,10 @@ dialog.matches('builtin.intent.alarm.set_alarm', [
         var title = builder.EntityRecognizer.findEntity(args.entities, 'builtin.alarm.title');
         var time = builder.EntityRecognizer.resolveTime(args.entities);
         var alarm = session.dialogData.alarm = {
-          title: title ? title.entity : null,
-          timestamp: time ? time.getTime() : null  
+            title: title ? title.entity : null,
+            timestamp: time ? time.getTime() : null
         };
-        
+
         // Prompt for title
         if (!alarm.title) {
             builder.Prompts.text(session, 'What would you like to call your alarm?');
@@ -61,13 +61,13 @@ dialog.matches('builtin.intent.alarm.set_alarm', [
             var time = builder.EntityRecognizer.resolveTime([results.response]);
             alarm.timestamp = time ? time.getTime() : null;
         }
-        
+
         // Set the alarm (if title or timestamp is blank the user said cancel)
         if (alarm.title && alarm.timestamp) {
             // Save address of who to notify and write to scheduler.
             alarm.address = session.message.address;
             alarms[alarm.title] = alarm;
-            
+
             // Send confirmation to user
             var date = new Date(alarm.timestamp);
             var isAM = date.getHours() < 12;
@@ -90,7 +90,7 @@ dialog.matches('builtin.intent.alarm.delete_alarm', [
             // Verify its in our set of alarms.
             title = builder.EntityRecognizer.findBestMatch(alarms, entity.entity);
         }
-        
+
         // Prompt for alarm name
         if (!title) {
             builder.Prompts.choice(session, 'Which alarm would you like to delete?', alarms);
